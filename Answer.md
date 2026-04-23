@@ -1,4 +1,4 @@
-# Exam Answers
+# Senior Test Engineer (Retail Automate)
 
 ---
 
@@ -395,3 +395,279 @@ CAT
 - `E` → `C`
 - `C` → `A`
 - `V` → `T`
+
+
+# Senior Test Engineer Assessment (A) — Answers
+
+---
+
+## No.1 – 3 : Basic Software Testing and Test Case Design
+
+---
+
+### Answer No.1 — Test Cases: Money Transfer Feature (Mobile Banking)
+
+#### Transfer Flow Overview
+> **Decision to Transfer → Select Transfer Method → Enter Details → Review & Confirm → Completed**
+
+---
+
+| TC ID | Title | Pre-condition | Steps | Expected Result |
+|-------|-------|---------------|-------|-----------------|
+| TC-001 | Transfer to Own Account – Happy Path | User is logged in; has sufficient balance | 1. Go to Transfer from Home Screen 2. Select "Transfer to Own Account" 3. Select 'To' account and 'From' account 4. Enter a valid Amount 5. Tap Next/Confirm | Transaction data is validated successfully → Review screen is displayed |
+| TC-002 | Transfer to Own Account – Confirm on Review Screen | Review screen is displayed after TC-001 | 1. On Review screen, verify all transfer details 2. Tap "Confirm" | Transaction is completed; Completed screen is shown |
+| TC-003 | Transfer to Own Account – Invalid Amount (zero) | User is on Enter Details screen | 1. Select 'To' and 'From' account 2. Enter Amount = 0 3. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-004 | Transfer to Own Account – Amount Exceeds Balance | User has insufficient balance | 1. Select 'To' and 'From' account 2. Enter Amount greater than available balance 3. Tap Next | Bottom sheet error message is displayed on Review/Confirm screen |
+| TC-005 | Transfer to Own Account – Empty Amount Field | User is on Enter Details screen | 1. Select 'To' and 'From' account 2. Leave Amount field empty 3. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-006 | Transfer to Other Account – Happy Path | User is logged in; has sufficient balance | 1. Go to Transfer from Home Screen 2. Select "Transfer to Other Account" 3. Enter valid Citizen ID 4. Enter valid Amount 5. Tap Next | Transaction data is validated; Review screen is displayed |
+| TC-007 | Transfer to Other Account – Confirm Transaction | Review screen is displayed after TC-006 | 1. On Review screen, verify all details 2. Tap "Confirm" | Transaction completed; Completed screen is shown |
+| TC-008 | Transfer to Other Account – Invalid Citizen ID Format | User is on Enter Details screen | 1. Select "Transfer to Other Account" 2. Enter Citizen ID with less than 13 digits (e.g. "12345") 3. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-009 | Transfer to Other Account – Citizen ID with Special Characters | User is on Enter Details screen | 1. Enter Citizen ID containing special characters (e.g. "1234-567-890") 2. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-010 | Transfer to Other Account – Invalid Amount (negative) | User is on Enter Details screen | 1. Enter valid Citizen ID 2. Enter Amount = -100 3. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-011 | Transfer to Other Account – Validation Fails on Review | User reaches Review screen with unverifiable data | 1. On Review screen, tap Confirm | Bottom sheet error message is displayed; transaction is not completed |
+| TC-012 | Transfer to PromptPay via Citizen ID – Happy Path | User is logged in; has sufficient balance | 1. Go to Transfer from Home Screen 2. Select "Transfer to PromptPay (Citizen ID / Mobile Phone)" 3. Enter valid Citizen ID (13 digits) 4. Enter valid Amount 5. Tap Next | Transaction data is validated; Review screen is displayed |
+| TC-013 | Transfer to PromptPay via Mobile Phone – Happy Path | User is logged in; has sufficient balance | 1. Select "Transfer to PromptPay (Citizen ID / Mobile Phone)" 2. Enter valid Mobile Phone Number (10 digits) 3. Enter valid Amount 4. Tap Next | Transaction data is validated; Review screen is displayed |
+| TC-014 | Transfer to PromptPay – Confirm Transaction | Review screen is displayed after TC-012/TC-013 | 1. Verify transfer details on Review screen 2. Tap Confirm | Transaction completed; Completed screen is shown |
+| TC-015 | Transfer to PromptPay – Invalid Citizen ID | User is on Enter Details screen | 1. Enter Citizen ID with incorrect length or letters 2. Enter valid Amount 3. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-016 | Transfer to PromptPay – Invalid Mobile Phone Number | User is on Enter Details screen | 1. Enter Mobile Phone with incorrect format (e.g. 8 digits) 2. Enter valid Amount 3. Tap Next | Inline error message is displayed; user cannot proceed |
+| TC-017 | Transfer to PromptPay – Validation Fails on Review Screen | User reaches Review/Confirm screen | 1. Tap Confirm on Review screen | Bottom sheet error message is displayed; transaction is not completed |
+| TC-018 | Transfer to PromptPay – Empty Citizen ID/Mobile Field | User is on Enter Details screen | 1. Leave Citizen ID/Mobile field empty 2. Enter valid Amount 3. Tap Next | Inline error message is displayed; user cannot proceed |
+
+---
+
+### Answer No.2 — Defect Report Template
+
+| Field | Detail |
+|-------|--------|
+| **Defect ID** | BUG-001 |
+| **Title** | [Login] Application fails to login with correct username and password |
+| **Reported By** | Napat Phongam |
+| **Date** | 2026-04-23 |
+| **Environment** | Mobile Banking App – iOS 17 / Android 14, App Version 1.0.0, Staging Environment |
+| **Severity** | Critical |
+| **Priority** | High |
+| **Status** | Open |
+| **Module** | Authentication / Login |
+
+**Description:**
+The application is unable to authenticate and log in the user despite entering a valid and correct username and password. The login process does not proceed and the user remains on the login screen.
+
+**Steps to Reproduce:**
+1. Open the mobile banking application.
+2. Enter a valid, registered username.
+3. Enter the correct password for that username.
+4. Tap the "Login" button.
+
+**Expected Result:**
+The application should authenticate the user successfully and navigate to the Home Screen.
+
+**Actual Result:**
+The application cannot login to the system even though the username and password entered are correct. The user remains on the login screen and no error message indicating the cause is displayed.
+
+**Attachments:**
+- Screenshot of the login screen after failed attempt
+- Log file from the session (if available)
+
+**Additional Notes:**
+- Issue is reproducible 100% of the time.
+- Tested with multiple valid accounts — all fail to login.
+- Password reset does not resolve the issue.
+
+---
+
+### Answer No.3 — Priority and Severity Analysis
+
+**Case:** Transfer to Other Bank — PIN reported as incorrect / PIN locked after 3 attempts
+
+| | Level | Reason |
+|---|-------|--------|
+| **Severity** | **Critical** | The core money transfer feature is completely non-functional. More critically, the system incorrectly locks the customer's PIN after 3 failed attempts — even though the PIN entered is correct. A locked PIN causes the customer to lose access to all PIN-protected functions, which is a permanent and damaging consequence within the session. |
+| **Priority** | **High** | Money transfer is a primary feature of any banking application and directly impacts customer trust and business operations. This bug affects every customer attempting to transfer to another bank and causes irreversible account lockout. It must be fixed and deployed as soon as possible, prioritized above non-critical issues. |
+
+**Summary:**
+> This is a **Critical Severity / High Priority** defect. The bug not only blocks the core business transaction but also triggers a destructive side effect (PIN lockout) incorrectly. Any defect that locks a customer out of their banking account due to a system error must be treated with the highest urgency.
+
+---
+
+## No.4 – 5 : API Testing
+
+---
+
+### Answer No.4 — Postman Collection: Petstore API
+
+> Collection exported as: **`Napat_Postman_Collection.json`**
+> Swagger Reference: [https://petstore.swagger.io/](https://petstore.swagger.io/)
+
+#### Collection Structure
+
+```
+Napat_Postman_Collection
+├── GET  /pet/{petId}
+├── GET  /store/order/{orderId}
+└── POST /user
+```
+
+#### Request Details
+
+**1. GET /pet/{petId}**
+```
+Method : GET
+URL    : https://petstore.swagger.io/v2/pet/1
+Headers: Accept: application/json
+```
+
+**2. GET /store/order/{orderId}**
+```
+Method : GET
+URL    : https://petstore.swagger.io/v2/store/order/1
+Headers: Accept: application/json
+```
+
+**3. POST /user**
+```
+Method      : POST
+URL         : https://petstore.swagger.io/v2/user
+Headers     : Content-Type: application/json
+              Accept: application/json
+Request Body:
+{
+    "id": 1001,
+    "username": "napat_test",
+    "firstName": "Napat",
+    "lastName": "Phongam",
+    "email": "napat.test@example.com",
+    "password": "Test@1234",
+    "phone": "0812345678",
+    "userStatus": 1
+}
+```
+
+> See the exported collection file: **`Napat_Postman_Collection.json`** (attached separately)
+
+---
+
+### Answer No.5 — API Response Codes
+
+#### GET /pet/{petId}
+
+| Scenario | Input | Response Code | Description |
+|----------|-------|---------------|-------------|
+| Valid pet ID exists | `petId = 1` | **200 OK** | Pet data returned successfully |
+| Pet ID not found | `petId = 999999` | **404 Not Found** | Pet with given ID does not exist |
+| Invalid ID format | `petId = "abc"` | **400 Bad Request** | Invalid ID supplied |
+
+**Test Script (Postman):**
+```javascript
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response has pet id", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.id).to.eql(1);
+});
+```
+
+---
+
+#### GET /store/order/{orderId}
+
+| Scenario | Input | Response Code | Description |
+|----------|-------|---------------|-------------|
+| Valid order ID (1–10) | `orderId = 1` | **200 OK** | Order data returned successfully |
+| Order ID not found | `orderId = 999` | **404 Not Found** | Order not found |
+| Invalid ID format | `orderId = "xyz"` | **400 Bad Request** | Invalid ID supplied |
+
+**Test Script (Postman):**
+```javascript
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Order has required fields", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData).to.have.property("id");
+    pm.expect(jsonData).to.have.property("status");
+});
+```
+
+---
+
+#### POST /user
+
+| Scenario | Input | Response Code | Description |
+|----------|-------|---------------|-------------|
+| Valid user body | Complete JSON body | **200 OK** | User created successfully |
+| Missing required fields | Empty or partial body | **400 Bad Request** | Validation error |
+
+**Test Script (Postman):**
+```javascript
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("User created successfully", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.code).to.eql(200);
+    pm.expect(jsonData.type).to.eql("unknown");
+});
+```
+
+---
+
+## No.6 – 8 : SQL Test
+
+---
+
+### Answer No.6 — Display All Product Names
+
+```sql
+SELECT product_name
+FROM Products;
+```
+
+---
+
+### Answer No.7 — Display ID, Name, and Citizen Registered in 2022
+
+```sql
+SELECT id, name, citizen
+FROM Customers
+WHERE YEAR(registered_date) = 2022;
+```
+
+> **Alternative syntax (compatible with more SQL engines):**
+```sql
+SELECT id, name, citizen
+FROM Customers
+WHERE registered_date >= '2022-01-01'
+  AND registered_date < '2023-01-01';
+```
+
+---
+
+### Answer No.8 — Display Product & Customer Info by Customer ID
+
+```sql
+SELECT
+    p.product_id,
+    p.product_name,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_full_name,
+    c.citizen                              AS customer_citizen
+FROM Products p
+JOIN Customers c ON p.customer_id = c.customer_id
+WHERE c.customer_id = '001110001';
+```
+
+> **If the schema uses a separate Orders/Transactions linking table:**
+```sql
+SELECT
+    p.product_id,
+    p.product_name,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_full_name,
+    c.citizen                              AS customer_citizen
+FROM Products p
+JOIN Orders o    ON p.product_id  = o.product_id
+JOIN Customers c ON o.customer_id = c.customer_id
+WHERE c.customer_id = '001110001';
+```
